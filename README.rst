@@ -16,23 +16,18 @@ PyStun follows RFC 3489: http://www.ietf.org/rfc/rfc3489.txt
 A server following STUN-bis hasn't been found on internet so RFC3489 is the
 only implementation.
 
+update:
+use independent stun server replace server1 changeAddress as server2 avoid discerning cone nat as SymmetricNAT.
+use random source_port avoid wrong discerning full cone nat  in repeatedly testing.
+use port replace changePort avoid discerning RestricPortNAT as RestricNAT
+
+Python: must use python2
+
 Installation
 ------------
-To install the latest version::
-
-    $ pip install pystun
-
-or download/clone the source and install manually using::
-
+download/clone the source and install manually using::
     $ cd /path/to/pystun/src
     $ python setup.py install
-
-If you're hacking on pystun you should use the 'develop' command instead::
-
-    $ python setup.py develop
-
-This will make a link to the sources inside your site-packages directory so
-that any changes are immediately available for testing.
 
 Usage
 -----
