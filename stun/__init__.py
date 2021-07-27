@@ -9,19 +9,16 @@ log = logging.getLogger("pystun")
 
 STUN_SERVERS = (
     'stun.ekiga.net',
-    'stun.ideasip.com',
-    'stun.voiparound.com',
-    'stun.voipbuster.com',
-    'stun.voipstunt.com',
-    'stun.voxgratia.org'
 )
+
+STUN_SERVER2 = 'stun.voipbuster.com' # use independent stun server replace server1 changeAddress as server2 avoid discerning cone nat as SymmetricNAT.
 
 stun_servers_list = STUN_SERVERS
 
 DEFAULTS = {
     'stun_port': 3478,
     'source_ip': '0.0.0.0',
-    'source_port': 54320
+    'source_port': random.randint(50001,58000) # use random source_port avoid wrong discerning full cone nat  in repeatedly testing.
 }
 
 # stun attributes
@@ -222,7 +219,7 @@ def get_nat_type(s, source_ip, source_port, stun_host=None, stun_port=3478):
             typ = FullCone
         else:
             log.debug("Do Test1")
-            ret = stun_test(s, changedIP, changedPort, source_ip, source_port)
+            ret = stun_test(s, STUN_SERVER2, port, source_ip, source_port)
             log.debug("Result: %s", ret)
             if not ret['Resp']:
                 typ = ChangedAddressError
@@ -231,8 +228,8 @@ def get_nat_type(s, source_ip, source_port, stun_host=None, stun_port=3478):
                     changePortRequest = ''.join([ChangeRequest, '0004',
                                                  "00000002"])
                     log.debug("Do Test3")
-                    ret = stun_test(s, changedIP, port, source_ip, source_port,
-                                    changePortRequest)
+                    ret = stun_test(s, STUN_SERVER2, port, source_ip, source_port,
+                                    changePortRequest) # use port replace changePort avoid discerning RestricPortNAT as RestricNAT
                     log.debug("Result: %s", ret)
                     if ret['Resp']:
                         typ = RestricNAT
